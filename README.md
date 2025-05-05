@@ -26,8 +26,8 @@ Una aplicación web interactiva construida con [Streamlit](https://streamlit.io/
 
     Clona este repositorio:
 
-git clone https://github.com/tu-usuario/dashboard-acciones-argentina.git
-cd dashboard-acciones-argentina
+git clone https://github.com/danielcba/mini_dashboard/
+cd mini_dashboard
 
     Crea un entorno virtual (opcional pero recomendado):
 
@@ -72,9 +72,6 @@ El código:
 
     También se incluye información sobre exportar la vista HTML (requiere herramientas externas).
 
-🧑‍💻 Autor
-
-Creado por [Tu Nombre o Usuario de GitHub] – ¡siéntete libre de contribuir o hacer un fork del proyecto!
 📝 Licencia
 
 Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más información.
