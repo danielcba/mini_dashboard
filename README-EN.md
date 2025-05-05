@@ -27,7 +27,7 @@ An interactive web app built with [Streamlit](https://streamlit.io/) that allows
     Clone this repository:
 
 git clone https://github.com/danielcba/mini_dashboard.git
-cd /danielcba/mini_dashboard/
+cd /danielcba/mini_dashboard
 
     (Optional) Create a virtual environment:
 
