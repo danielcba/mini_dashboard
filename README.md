@@ -26,7 +26,7 @@ Una aplicación web interactiva construida con [Streamlit](https://streamlit.io/
 
     Clona este repositorio:
 
-git clone https://github.com/danielcba/mini_dashboard/
+git clone https://github.com/danielcba/mini_dashboard.git
 cd mini_dashboard
 
     Crea un entorno virtual (opcional pero recomendado):
