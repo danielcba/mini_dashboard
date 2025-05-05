@@ -74,6 +74,6 @@ El código:
 
 📝 Licencia
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más información.
+Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ¡Espero que este dashboard te ayude a tomar mejores decisiones financieras! 💰📊
