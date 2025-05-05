@@ -17,9 +17,8 @@ Una aplicación web interactiva construida con [Streamlit](https://streamlit.io/
 ---
 
 ## 🖼️ Captura de Pantalla
+![image](https://github.com/user-attachments/assets/6be4678d-11c5-4270-b84e-c06d5091756e)
 
-> Puedes añadir una imagen aquí con una vista previa del dashboard:
+
 
 ```bash
-# Ejemplo (coloca tu captura en la raíz del proyecto):
-![Dashboard Preview](screenshot.png)
