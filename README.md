@@ -22,3 +22,61 @@ Una aplicación web interactiva construida con [Streamlit](https://streamlit.io/
 
 
 ```bash
+🚀 Instalación
+
+    Clona este repositorio:
+
+git clone https://github.com/tu-usuario/dashboard-acciones-argentina.git
+cd dashboard-acciones-argentina
+
+    Crea un entorno virtual (opcional pero recomendado):
+
+python -m venv env
+source env/bin/activate  # En Linux/macOS
+env\Scripts\activate     # En Windows
+
+    Instala las dependencias:
+
+pip install -r requirements.txt
+
+    Requisitos principales:
+
+        streamlit
+
+        yfinance
+
+        plotly
+
+        pandas
+
+▶️ Uso
+
+Lanza la aplicación ejecutando:
+
+streamlit run app.py
+
+Luego abre tu navegador en http://localhost:8501
+🧠 ¿Cómo Funciona?
+
+El código:
+
+    Usa yfinance para descargar información financiera y precios históricos de cada ticker.
+
+    Muestra métricas clave (P/E, dividendos, ROE, etc.) junto a gráficos dinámicos de precios y dividendos.
+
+    Ofrece herramientas de exportación para análisis posterior.
+
+📁 Exportación de Datos
+
+    Puedes guardar los datos históricos en un archivo CSV desde la barra lateral.
+
+    También se incluye información sobre exportar la vista HTML (requiere herramientas externas).
+
+🧑‍💻 Autor
+
+Creado por [Tu Nombre o Usuario de GitHub] – ¡siéntete libre de contribuir o hacer un fork del proyecto!
+📝 Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más información.
+
+¡Espero que este dashboard te ayude a tomar mejores decisiones financieras! 💰📊
