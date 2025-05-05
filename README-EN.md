@@ -1,4 +1,4 @@
-# 📈 Argentina Stock Dashboard - PRO
+# 📈 Stock Dashboard (ticker)
 
 An interactive web app built with [Streamlit](https://streamlit.io/) that allows users to dynamically explore **financial metrics**, **historical prices**, and **dividends** for both local and international stocks. Perfect for investment tracking and stock analysis 📊.
 
