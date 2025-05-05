@@ -26,8 +26,8 @@ An interactive web app built with [Streamlit](https://streamlit.io/) that allows
 
     Clone this repository:
 
-git clone https://github.com/your-username/argentina-stock-dashboard.git
-cd argentina-stock-dashboard
+git clone https://github.com/danielcba/mini_dashboard.git
+cd /danielcba/mini_dashboard/
 
     (Optional) Create a virtual environment:
 
@@ -72,9 +72,6 @@ The app:
 
     Exporting the app as HTML is mentioned (requires external tools like streamlit-logger).
 
-🧑‍💻 Author
-
-Developed by [Your Name or GitHub Handle] – feel free to fork or contribute to the project!
 📝 License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
