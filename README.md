@@ -1,4 +1,4 @@
-# 📈 Dashboard de Acciones Argentina - PRO
+# 📈 Dashboard de Acciones (ticker)
 
 Una aplicación web interactiva construida con [Streamlit](https://streamlit.io/) que permite visualizar de forma clara y dinámica **métricas financieras**, **precios históricos** y **dividendos** de acciones locales e internacionales. Ideal para seguimiento de inversiones y análisis bursátil 📊.
 
