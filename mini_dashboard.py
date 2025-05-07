@@ -6,7 +6,7 @@ import plotly.graph_objects as go  # Para gráficos personalizados
 import plotly.express as px        # Para gráficos rápidos y estilizados
 
 # Configuramos la página de Streamlit
-st.set_page_config(page_title="📈 Dashboard Acciones Argentinas",
+st.set_page_config(page_title="📈 Dashboard Acciones",
                    layout="wide", initial_sidebar_state="expanded")
 
 # Estilos personalizados para modo claro y oscuro
