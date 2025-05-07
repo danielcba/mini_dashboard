@@ -59,7 +59,7 @@ ticker_seleccionado = st.sidebar.multiselect(
 periodo = st.sidebar.selectbox(
     "Periodo de datos históricos:",
     ['1mo', '3mo', '6mo', '1y', '2y', '5y', '10y'],
-    index=2  # Por defecto: 3 meses
+    index=3  # Por defecto: 3 meses
 )
 
 # Función para obtener la info y los datos históricos de un ticker
