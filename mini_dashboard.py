@@ -45,7 +45,7 @@ METRICAS_CLAVE = {
 
 # Lista de tickers disponibles (acciones locales e internacionales)
 TICKERS = ['ALUA.BA', 'BYMA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
-           'METR.BA', 'MSFT', 'PAMP.BA', 'SUPV.BA', 'TGSU2.BA', 'YPFD.BA']
+           'METR.BA', 'MSFT', 'PAMP.BA', 'SUPV.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA', 'YPFD.BA']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
