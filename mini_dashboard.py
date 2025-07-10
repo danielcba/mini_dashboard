@@ -44,7 +44,7 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['ES', 'IBM', 'ALUA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
+TICKERS = ['ALUA.BA', 'BYMA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
            'METR.BA', 'MSFT', 'PAMP.BA', 'SUPV.BA', 'TGSU2.BA', 'YPFD.BA']
 
 # Sección lateral de configuración del usuario
