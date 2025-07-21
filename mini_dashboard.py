@@ -159,17 +159,25 @@ if ticker_seleccionado:
 st.sidebar.markdown("### 📥 Exportar Datos")
 
 # Botón para descargar los datos históricos como CSV
-if st.sidebar.button("Descargar CSV"):
-    csv_total = pd.DataFrame()
-    for ticker in ticker_seleccionado:
-        _, historico = obtener_datos(ticker)
-        historico['Ticker'] = ticker  # Agregamos columna con el nombre del ticker
-        csv_total = pd.concat([csv_total, historico])  # Concatenamos todo
+csv_total = pd.DataFrame()
+for ticker in ticker_seleccionado:
+    _, historico = obtener_datos(ticker)
+    historico['Ticker'] = ticker  # Agregamos columna con el nombre del ticker
+    csv_total = pd.concat([csv_total, historico])  # Concatenamos todo
 
-    csv_total.to_csv("datos_acciones.csv")
-    st.sidebar.success("CSV guardado como `datos_acciones.csv` 📂")
+# Convertir DataFrame a CSV
+csv = csv_total.to_csv(index=False).encode('utf-8')
+
+# Botón de descarga
+st.sidebar.download_button(
+    label="📥 Descargar CSV",
+    data=csv,
+    file_name="datos_acciones.csv",
+    mime="text/csv",
+    help="Haz clic para descargar los datos en formato CSV"
+)
 
 # Información sobre exportar a HTML (no soportado directamente)
-if st.sidebar.button("Descargar HTML de la App"):
-    st.sidebar.info(
-        "Exportar como HTML requiere usar `streamlit` export tools externas (ej: streamlit-logger o grabar manualmente la web).")
+#if st.sidebar.button("Descargar HTML de la App"):
+#    st.sidebar.info(
+#        "Exportar como HTML requiere usar `streamlit` export tools externas (ej: streamlit-logger o grabar manualmente la web).")
