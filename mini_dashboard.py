@@ -6,7 +6,7 @@ import plotly.graph_objects as go  # Para gráficos personalizados
 import plotly.express as px        # Para gráficos rápidos y estilizados
 
 # Configuramos la página de Streamlit
-st.set_page_config(page_title="📈 Dashboard Acciones",
+st.set_page_config(page_title="📈 Dashboard Acciones Argentina - PRO",
                    layout="wide", initial_sidebar_state="expanded")
 
 # Estilos personalizados para modo claro y oscuro
@@ -46,7 +46,7 @@ METRICAS_CLAVE = {
 # Lista de tickers disponibles (acciones locales e internacionales)
 #TICKERS = ['ALUA.BA', 'BYMA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
 #           'METR.BA', 'PAMP.BA', 'SUPV.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA', 'YPFD.BA']
-TICKERS = ['CGPA2.BA', 'CRES.BA', 'PAMP.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA', 'YPFD.BA']
+TICKERS = ['BYMA.BA', 'BMA.BA', 'CGPA2.BA', 'CRES.BA', 'PAMP.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA']
 
 
 # Sección lateral de configuración del usuario
@@ -61,7 +61,7 @@ ticker_seleccionado = st.sidebar.multiselect(
 periodo = st.sidebar.selectbox(
     "Periodo de datos históricos:",
     ['1mo', '3mo', '6mo', '1y', '2y', '5y', '10y'],
-    index=3  # Por defecto: 3 meses
+    index=1  # Por defecto: 3 meses
 )
 
 # Función para obtener la info y los datos históricos de un ticker
