@@ -34,6 +34,7 @@ METRICAS_CLAVE = {
     'trailingPE': 'P/E Ratio (últimos 12 meses)',
     'forwardPE': 'P/E Ratio Proyectado',
     'dividendYield': 'Dividend Yield (%)',
+    'dividendRate': 'Precio de Pago de Dividendo (ARS)',
     'regularMarketChangePercent': 'Cambio Diario (%)',
     'beta': 'Beta (volatilidad vs mercado)',
     'debtToEquity': 'Deuda/Capital (%)',
@@ -46,7 +47,7 @@ METRICAS_CLAVE = {
 # Lista de tickers disponibles (acciones locales e internacionales)
 #TICKERS = ['ALUA.BA', 'BYMA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
 #           'METR.BA', 'PAMP.BA', 'SUPV.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA', 'YPFD.BA']
-TICKERS = ['AAPL', 'AMZN', 'GOOG', 'IBM', 'MSFT', 'NVDA', 'SP500', 'TSLA']
+TICKERS = ['AAPL', 'AMZN', 'GOOG', 'IBM', 'MSFT', 'SP500', 'TSLA']
 
 
 # Sección lateral de configuración del usuario
@@ -131,9 +132,20 @@ if ticker_seleccionado:
 
             df_metricas = pd.DataFrame.from_dict(
                 metricas, orient='index', columns=['Valor'])
-            st.dataframe(
-                df_metricas.style.format("{:.2f}", subset=df_metricas.select_dtypes(include=["number"]).columns)
-            )
+            
+            # Función para aplicar estilos condicionales
+            def color_negative_red(val):
+                if isinstance(val, (int, float)) and val < 0 and df_metricas.index[df_metricas['Valor'] == val][0] == 'Cambio Diario (%)':
+                    return 'color: red'
+                return 'color: white'  # Color blanco para mejor visibilidad en tema oscuro
+            
+            # Aplicar estilos
+            styled_df = df_metricas.style.format(
+                "{:.2f}", 
+                subset=df_metricas.select_dtypes(include=["number"]).columns
+            ).applymap(color_negative_red)
+            
+            st.dataframe(styled_df)
 
             # Recomendación de analistas (ej: BUY, HOLD, etc.)
             recomendacion = info.get('recommendationKey', 'N/A').upper()
