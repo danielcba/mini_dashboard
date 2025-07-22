@@ -62,12 +62,12 @@ ticker_seleccionado = st.sidebar.multiselect(
 periodo = st.sidebar.selectbox(
     "Periodo de datos históricos:",
     ['1mo', '3mo', '6mo', '1y', '2y', '5y', '10y'],
-    index=3  # Por defecto: 1y meses
+    index=3  # Por defecto: 1y
 )
 
 # Función para obtener la info y los datos históricos de un ticker
 @st.cache_data
-def obtener_datos(ticker):
+def obtener_datos(ticker, periodo):
     datos = yf.Ticker(ticker)
     info = datos.info  # Información general de la empresa
     historico = datos.history(period=periodo)  # Datos históricos según el período elegido
@@ -76,7 +76,7 @@ def obtener_datos(ticker):
 # Si hay tickers seleccionados, mostramos su información
 if ticker_seleccionado:
     for ticker in ticker_seleccionado:
-        info, historico = obtener_datos(ticker)
+        info, historico = obtener_datos(ticker, periodo)
 
         st.subheader(f"📊 {ticker}")  # Subtítulo con el nombre del ticker
 
@@ -173,7 +173,7 @@ st.sidebar.markdown("### 📥 Exportar Datos")
 # Botón para descargar los datos históricos como CSV
 csv_total = pd.DataFrame()
 for ticker in ticker_seleccionado:
-    _, historico = obtener_datos(ticker)
+    _, historico = obtener_datos(ticker, periodo)
     historico['Ticker'] = ticker  # Agregamos columna con el nombre del ticker
     csv_total = pd.concat([csv_total, historico])  # Concatenamos todo
 
@@ -188,8 +188,3 @@ st.sidebar.download_button(
     mime="text/csv",
     help="Haz clic para descargar los datos en formato CSV"
 )
-
-# Información sobre exportar a HTML (no soportado directamente)
-#if st.sidebar.button("Descargar HTML de la App"):
-#    st.sidebar.info(
-#        "Exportar como HTML requiere usar `streamlit` export tools externas (ej: streamlit-logger o grabar manualmente la web).")
