@@ -168,7 +168,7 @@ if ticker_seleccionado:
             """, unsafe_allow_html=True)
 
 # Sección de exportación de datos (botones en la barra lateral)
-st.sidebar.markdown("### 📥 Exportar Datos")
+st.sidebar.markdown("### 📥 Exportar Datos Históricos")
 
 # Botón para descargar los datos históricos como CSV
 csv_total = pd.DataFrame()
@@ -184,7 +184,7 @@ csv = csv_total.to_csv(index=False).encode('utf-8')
 st.sidebar.download_button(
     label="📥 Descargar CSV",
     data=csv,
-    file_name="datos_acciones.csv",
+    file_name="datos_historicos_acciones.csv",
     mime="text/csv",
     help="Haz clic para descargar los datos en formato CSV"
 )
