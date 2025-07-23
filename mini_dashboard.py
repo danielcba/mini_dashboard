@@ -151,14 +151,33 @@ if ticker_seleccionado:
             df_metricas = pd.DataFrame.from_dict(
                 metricas, orient='index', columns=['Valor'])
             
-            # Función para aplicar estilos condicionales
-            def color_negative_red(val):
-                if isinstance(val, (int, float)) and val < 0 and df_metricas.index[df_metricas['Valor'] == val][0] == 'Cambio Diario (%)':
-                    return 'color: red'
-                return 'color: white'  # Color blanco para mejor visibilidad en tema oscuro
+            # Función para aplicar estilos condicionales por fila
+            def style_row(row):
+                metric_name = row.name  # Nombre de la métrica (índice)
+                valor = row['Valor']
+                style = ''
+                
+                # Aplicar color solo para 'Cambio Diario (%)'
+                if metric_name == 'Cambio Diario (%)':
+                    try:
+                        # Convertir a float (los valores vienen como strings formateados)
+                        valor_float = float(valor)
+                        if valor_float < 0:
+                            style = 'color: #FF5252; font-weight: bold'  # Rojo
+                        elif valor_float > 0:
+                            style = 'color: #4CAF50; font-weight: bold'  # Verde
+                    except (ValueError, TypeError):
+                        # Mantener estilo neutro si no se puede convertir
+                        pass
+                
+                # Devolver estilo para cada celda de la fila
+                return [style]
             
-            # Aplicar estilos de color
-            styled_df = df_metricas.style.applymap(color_negative_red)
+            # Aplicar estilos y formato
+            styled_df = (
+                df_metricas.style
+                .apply(style_row, axis=1)
+            )
             
             # Formatear todos los valores numéricos a 2 decimales
             styled_df = styled_df.format(
