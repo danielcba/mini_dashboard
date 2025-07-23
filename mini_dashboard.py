@@ -97,6 +97,9 @@ if ticker_seleccionado:
                 title="Evolución del Precio",
                 xaxis_title="Fecha",
                 yaxis_title="Precio (ARS)",
+                yaxis=dict(
+                    tickformat=".2f"  # Formato de 2 decimales para el eje Y
+                ),
                 template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
                 height=400
             )
@@ -121,14 +124,29 @@ if ticker_seleccionado:
                 st.info("No se registran dividendos en este periodo.")
 
         with col2:
+            # Función para formatear números grandes (millones y billones)
+            def format_number(val):
+                if not isinstance(val, (int, float)) or pd.isna(val):
+                    return val
+                if abs(val) >= 1e12:  # Trillones
+                    return f"{val/1e12:.2f}T"
+                elif abs(val) >= 1e6:  # Millones
+                    return f"{val/1e6:.2f}M"
+                return f"{val:.2f}"
+
             # Tabla de métricas financieras clave
             st.markdown("### 📌 Métricas Clave")
             metricas = {}
             for clave, nombre in METRICAS_CLAVE.items():
                 valor = info.get(clave, 'N/A')  # Obtenemos el valor de la métrica
-                if isinstance(valor, float):
-                    valor = round(valor, 2)
-                metricas[nombre] = valor
+                if isinstance(valor, (int, float)) and not pd.isna(valor):
+                    if 'Capitalización' in nombre:  # Aplicar formato especial a capitalización
+                        metricas[nombre] = format_number(valor)
+                    else:
+                        # Formatear a string con exactamente 2 decimales
+                        metricas[nombre] = f"{float(valor):.2f}"
+                else:
+                    metricas[nombre] = valor
 
             df_metricas = pd.DataFrame.from_dict(
                 metricas, orient='index', columns=['Valor'])
@@ -139,11 +157,13 @@ if ticker_seleccionado:
                     return 'color: red'
                 return 'color: white'  # Color blanco para mejor visibilidad en tema oscuro
             
-            # Aplicar estilos
-            styled_df = df_metricas.style.format(
-                "{:.2f}", 
-                subset=df_metricas.select_dtypes(include=["number"]).columns
-            ).applymap(color_negative_red)
+            # Aplicar estilos de color
+            styled_df = df_metricas.style.applymap(color_negative_red)
+            
+            # Formatear todos los valores numéricos a 2 decimales
+            styled_df = styled_df.format(
+                formatter=lambda x: f"{float(x):.2f}" if isinstance(x, (int, float)) and not pd.isna(x) else x
+            )
             
             st.dataframe(styled_df)
 
@@ -188,3 +208,4 @@ st.sidebar.download_button(
     mime="text/csv",
     help="Haz clic para descargar los datos en formato CSV"
 )
+
