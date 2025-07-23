@@ -20,6 +20,11 @@ st.markdown("""
         --background-color: #0e1117;
         --text-color: #fafafa;
     }
+    
+    /* Mejora de estilo para las métricas */
+    .metric-row {
+        padding: 5px 0;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -45,17 +50,14 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-#TICKERS = ['ALUA.BA', 'BYMA.BA', 'BMA.BA','CGPA2.BA', 'EDN.BA', 'GGAL.BA',
-#           'METR.BA', 'PAMP.BA', 'SUPV.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA', 'YPFD.BA']
 TICKERS = ['AAPL', 'AMZN', 'GOOG', 'IBM', 'MSFT', 'SP500', 'TSLA']
-
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['AAPL']  # Por defecto se muestra YPFD
+    default=['AAPL']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
@@ -72,6 +74,18 @@ def obtener_datos(ticker, periodo):
     info = datos.info  # Información general de la empresa
     historico = datos.history(period=periodo)  # Datos históricos según el período elegido
     return info, historico
+
+# Función para formatear números grandes (millones y billones)
+def format_number(val):
+    if not isinstance(val, (int, float)) or pd.isna(val):
+        return val
+    if abs(val) >= 1e12:  # Trillones
+        return f"{val/1e12:.2f}T"
+    elif abs(val) >= 1e9:  # Billones
+        return f"{val/1e9:.2f}B"
+    elif abs(val) >= 1e6:  # Millones
+        return f"{val/1e6:.2f}M"
+    return f"{val:,.2f}"
 
 # Si hay tickers seleccionados, mostramos su información
 if ticker_seleccionado:
@@ -93,15 +107,25 @@ if ticker_seleccionado:
                 name='Cierre',
                 line=dict(color='royalblue', width=2)
             ))
+            
+            # Añadir bandas de máximo y mínimo de 52 semanas si están disponibles
+            if 'fiftyTwoWeekHigh' in info and 'fiftyTwoWeekLow' in info:
+                max_52 = info['fiftyTwoWeekHigh']
+                min_52 = info['fiftyTwoWeekLow']
+                fig.add_hline(y=max_52, line_dash="dash", line_color="red", 
+                              annotation_text=f"Máx 52s: {max_52:.2f}", 
+                              annotation_position="bottom right")
+                fig.add_hline(y=min_52, line_dash="dash", line_color="green", 
+                              annotation_text=f"Mín 52s: {min_52:.2f}", 
+                              annotation_position="bottom right")
+            
             fig.update_layout(
                 title="Evolución del Precio",
                 xaxis_title="Fecha",
                 yaxis_title="Precio (ARS)",
-                yaxis=dict(
-                    tickformat=".2f"  # Formato de 2 decimales para el eje Y
-                ),
+                yaxis=dict(tickformat=".2f"),
                 template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
-                height=400
+                height=450
             )
             st.plotly_chart(fig, use_container_width=True)
 
@@ -113,7 +137,9 @@ if ticker_seleccionado:
                     x='Date',
                     y='Dividends',
                     labels={'Dividends': 'Dividendos'},
-                    title='Dividendos pagados'
+                    title='Dividendos pagados',
+                    color='Dividends',
+                    color_continuous_scale='greens'
                 )
                 fig_div.update_layout(
                     template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
@@ -124,16 +150,6 @@ if ticker_seleccionado:
                 st.info("No se registran dividendos en este periodo.")
 
         with col2:
-            # Función para formatear números grandes (millones y billones)
-            def format_number(val):
-                if not isinstance(val, (int, float)) or pd.isna(val):
-                    return val
-                if abs(val) >= 1e12:  # Trillones
-                    return f"{val/1e12:.2f}T"
-                elif abs(val) >= 1e6:  # Millones
-                    return f"{val/1e6:.2f}M"
-                return f"{val:.2f}"
-
             # Tabla de métricas financieras clave
             st.markdown("### 📌 Métricas Clave")
             metricas = {}
@@ -144,7 +160,7 @@ if ticker_seleccionado:
                         metricas[nombre] = format_number(valor)
                     else:
                         # Formatear a string con exactamente 2 decimales
-                        metricas[nombre] = f"{float(valor):.2f}"
+                        metricas[nombre] = valor
                 else:
                     metricas[nombre] = valor
 
@@ -157,34 +173,27 @@ if ticker_seleccionado:
                 valor = row['Valor']
                 style = ''
                 
-                # Aplicar color solo para 'Cambio Diario (%)'
+                # Solo aplicar color a 'Cambio Diario (%)'
                 if metric_name == 'Cambio Diario (%)':
-                    try:
-                        # Convertir a float (los valores vienen como strings formateados)
-                        valor_float = float(valor)
-                        if valor_float < 0:
+                    if isinstance(valor, (int, float)) and not pd.isna(valor):
+                        if valor < 0:
                             style = 'color: #FF5252; font-weight: bold'  # Rojo
-                        elif valor_float > 0:
+                        elif valor > 0:
                             style = 'color: #4CAF50; font-weight: bold'  # Verde
-                    except (ValueError, TypeError):
-                        # Mantener estilo neutro si no se puede convertir
-                        pass
-                
-                # Devolver estilo para cada celda de la fila
-                return [style]
+                return [style]  # Devuelve una lista con un estilo por celda
             
             # Aplicar estilos y formato
             styled_df = (
                 df_metricas.style
                 .apply(style_row, axis=1)
+                .format(
+                    formatter={
+                        'Valor': lambda x: f"{x:,.2f}" if isinstance(x, (int, float)) and not pd.isna(x) else x
+                    }
+                )
             )
             
-            # Formatear todos los valores numéricos a 2 decimales
-            styled_df = styled_df.format(
-                formatter=lambda x: f"{float(x):.2f}" if isinstance(x, (int, float)) and not pd.isna(x) else x
-            )
-            
-            st.dataframe(styled_df)
+            st.dataframe(styled_df, height=500)
 
             # Recomendación de analistas (ej: BUY, HOLD, etc.)
             recomendacion = info.get('recommendationKey', 'N/A').upper()
@@ -210,21 +219,23 @@ if ticker_seleccionado:
 st.sidebar.markdown("### 📥 Exportar Datos Históricos")
 
 # Botón para descargar los datos históricos como CSV
-csv_total = pd.DataFrame()
-for ticker in ticker_seleccionado:
-    _, historico = obtener_datos(ticker, periodo)
-    historico['Ticker'] = ticker  # Agregamos columna con el nombre del ticker
-    csv_total = pd.concat([csv_total, historico])  # Concatenamos todo
+if ticker_seleccionado:
+    csv_total = pd.DataFrame()
+    for ticker in ticker_seleccionado:
+        _, historico = obtener_datos(ticker, periodo)
+        historico['Ticker'] = ticker  # Agregamos columna con el nombre del ticker
+        csv_total = pd.concat([csv_total, historico])  # Concatenamos todo
 
-# Convertir DataFrame a CSV
-csv = csv_total.to_csv(index=False).encode('utf-8')
+    # Convertir DataFrame a CSV
+    csv = csv_total.to_csv(index=False).encode('utf-8')
 
-# Botón de descarga
-st.sidebar.download_button(
-    label="📥 Descargar CSV",
-    data=csv,
-    file_name="datos_historicos_acciones.csv",
-    mime="text/csv",
-    help="Haz clic para descargar los datos en formato CSV"
-)
-
+    # Botón de descarga
+    st.sidebar.download_button(
+        label="📥 Descargar CSV",
+        data=csv,
+        file_name="datos_historicos_acciones.csv",
+        mime="text/csv",
+        help="Haz clic para descargar los datos en formato CSV"
+    )
+else:
+    st.sidebar.warning("Selecciona al menos un ticker para exportar datos")
