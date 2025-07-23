@@ -34,12 +34,12 @@ st.markdown("Visualización dinámica de métricas financieras, precios históri
 
 # Diccionario con métricas clave que se quieren mostrar, con nombres más amigables
 METRICAS_CLAVE = {
-    'currentPrice': 'Precio Actual (ARS)',
+    'currentPrice': 'Precio Actual',
     'marketCap': 'Capitalización de Mercado',
     'trailingPE': 'P/E Ratio (últimos 12 meses)',
     'forwardPE': 'P/E Ratio Proyectado',
     'dividendYield': 'Dividend Yield (%)',
-    'dividendRate': 'Precio de Pago de Dividendo (ARS)',
+    'dividendRate': 'Precio de Pago de Dividendo',
     'regularMarketChangePercent': 'Cambio Diario (%)',
     'beta': 'Beta (volatilidad vs mercado)',
     'debtToEquity': 'Deuda/Capital (%)',
@@ -112,17 +112,17 @@ if ticker_seleccionado:
             if 'fiftyTwoWeekHigh' in info and 'fiftyTwoWeekLow' in info:
                 max_52 = info['fiftyTwoWeekHigh']
                 min_52 = info['fiftyTwoWeekLow']
-                fig.add_hline(y=max_52, line_dash="dash", line_color="red", 
+                fig.add_hline(y=max_52, line_dash="dash", line_color="green", 
                               annotation_text=f"Máx 52s: {max_52:.2f}", 
                               annotation_position="bottom right")
-                fig.add_hline(y=min_52, line_dash="dash", line_color="green", 
+                fig.add_hline(y=min_52, line_dash="dash", line_color="red", 
                               annotation_text=f"Mín 52s: {min_52:.2f}", 
                               annotation_position="bottom right")
             
             fig.update_layout(
                 title="Evolución del Precio",
                 xaxis_title="Fecha",
-                yaxis_title="Precio (ARS)",
+                yaxis_title="Precio",
                 yaxis=dict(tickformat=".2f"),
                 template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
                 height=450
