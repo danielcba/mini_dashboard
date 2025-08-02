@@ -44,7 +44,7 @@ METRICAS_CLAVE = {
     'beta': 'Beta (volatilidad vs mercado)',
     'debtToEquity': 'Deuda/Capital (%)',
     'returnOnEquity': 'ROE (%)',
-    'profitMargins': 'Márgen Neto (%)',
+    'profitMargins': 'Margen Neto (%)',
     'fiftyTwoWeekHigh': 'Máximo 52 semanas',
     'fiftyTwoWeekLow': 'Mínimo 52 semanas'
 }
