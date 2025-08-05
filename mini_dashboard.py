@@ -50,7 +50,6 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-# TICKERS = ['BYMA.BA', 'BMA.BA', 'CGPA2.BA', 'CRES.BA', 'PAMP.BA', 'TECO2.BA', 'TGNO4.BA', 'TGSU2.BA']
 TICKERS = ['AAPL', 'AMZN', 'AVGO', '^GSPC', 'GOOG', 'IBM', 'META', 'MSFT', 'NVDA', 'PM', 'TSLA', 'UNH']
 
 # Sección lateral de configuración del usuario
@@ -93,7 +92,9 @@ if ticker_seleccionado:
     for ticker in ticker_seleccionado:
         info, historico = obtener_datos(ticker, periodo)
 
-        st.subheader(f"📊 {ticker}")  # Subtítulo con el nombre del ticker
+        # Obtener el nombre de la empresa (shortName o longName)
+        company_name = info.get('shortName', info.get('longName', '')) or 'Empresa desconocida'
+        st.subheader(f"📊 {ticker} - {company_name}")  # Subtítulo con el nombre del ticker y la empresa
 
         # Creamos dos columnas: una para gráficos y otra para métricas
         col1, col2 = st.columns([3, 1])
