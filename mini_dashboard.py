@@ -1,6 +1,8 @@
 # Importamos las librerías necesarias
 import streamlit as st  # Para crear interfaces interactivas web
 import yfinance as yf   # Para obtener datos financieros de Yahoo Finance
+from yfinance.exceptions import YFRateLimitError  # Manejo de límite de peticiones
+import time  # Para pausas entre reintentos
 import pandas as pd     # Para manipulación de datos tabulares
 import plotly.graph_objects as go  # Para gráficos personalizados
 import plotly.express as px        # Para gráficos rápidos y estilizados
@@ -69,11 +71,27 @@ periodo = st.sidebar.selectbox(
 
 # Función para obtener la info y los datos históricos de un ticker
 @st.cache_data
-def obtener_datos(ticker, periodo):
-    datos = yf.Ticker(ticker)
-    info = datos.info  # Información general de la empresa
-    historico = datos.history(period=periodo)  # Datos históricos según el período elegido
-    return info, historico
+def obtener_datos(ticker, periodo, reintentos: int = 3, pausa_inicial: int = 2):
+    """Descarga información y precios históricos del ticker.
+
+    Realiza varios reintentos con back-off exponencial para evitar errores
+    `YFRateLimitError` cuando se excede el límite de Yahoo Finance (frecuente
+    en Streamlit Cloud donde muchas apps comparten IP).
+    """
+    for intento in range(reintentos):
+        try:
+            datos = yf.Ticker(ticker)
+            info = datos.info  # Información general de la empresa
+            historico = datos.history(period=periodo)
+            return info, historico
+        except YFRateLimitError:
+            # Si no es el último intento, esperar y reintentar
+            if intento < reintentos - 1:
+                time.sleep(pausa_inicial * (2 ** intento))  # back-off exponencial
+            else:
+                st.warning(f"⚠️ Límite de peticiones alcanzado para {ticker}. Intenta más tarde.")
+                # Devolver estructuras vacías para evitar que la app se caiga
+                return {}, pd.DataFrame()
 
 # Función para formatear números grandes (millones y billones)
 def format_number(val):
