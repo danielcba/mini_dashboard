@@ -50,7 +50,7 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['AAPL', 'AMZN', 'AVGO', '^GSPC', 'GOOG', 'IBM', 'META', 'MSFT', 'NVDA', 'PM', 'TSLA', 'UNH']
+TICKERS = ['AAPL', 'AMZN', 'AVGO', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'META', 'MSFT', 'NVDA', 'PM', 'TSLA', 'UNH']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
@@ -129,7 +129,7 @@ if ticker_seleccionado:
                 template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
                 height=450
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, key=f"{ticker}_price")
 
             # Gráfico de dividendos si existen datos de dividendos
             if 'Dividends' in historico.columns and historico['Dividends'].sum() > 0:
@@ -147,7 +147,7 @@ if ticker_seleccionado:
                     template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
                     height=300
                 )
-                st.plotly_chart(fig_div, use_container_width=True)
+                st.plotly_chart(fig_div, use_container_width=True, key=f"{ticker}_div")
             else:
                 st.info("No se registran dividendos en este periodo.")
 
