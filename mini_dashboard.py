@@ -52,7 +52,8 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['AAPL', 'ADBE', 'AMCR', 'AMZN', 'AVGO', 'BEN', 'CDUAF', 'CVX', 'FDX', 'FIZZ', 'FRT', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'INTC', 'JNJ', 'KAI', 'KO', 'LNVGY', 'NWN', 'MELI', 'META', 'MKTX', 'MSFT', 'NVDA', 'PEP', 'PM', 'SWK', 'TROW', 'TSLA', 'UNH', 'XOM']
+# TICKERS = ['AAPL', 'ADBE', 'AMCR', 'AMZN', 'AVGO', 'BEN', 'CDUAF', 'CVX', 'FDX', 'FIZZ', 'FRT', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'INTC', 'JNJ', 'KAI', 'KO', 'LNVGY', 'NWN', 'MELI', 'META', 'MKTX', 'MSFT', 'NVDA', 'PEP', 'PM', 'SWK', 'TROW', 'TSLA', 'UNH', 'XOM']
+TICKERS = ['AAPL', 'FIZZ', 'FXAIX', 'JPM', 'SPAXX', 'TSLA', 'VOO']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
