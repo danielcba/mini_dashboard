@@ -61,7 +61,7 @@ st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['AAPL']  # Por defecto se muestra AAPL
+    default=['LMT']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
