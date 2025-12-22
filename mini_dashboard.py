@@ -54,14 +54,14 @@ METRICAS_CLAVE = {
 # Lista de tickers disponibles (acciones locales e internacionales)
 # TICKERS = ['AAPL', 'ADBE', 'AMCR', 'AMZN', 'AVGO', 'BEN', 'CDUAF', 'CVX', 'FDX', 'FIZZ', 'FRT', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'INTC', 'JNJ', 'KAI', 'KO', 'LNVGY', 'NWN', 'MELI', 'META', 'MKTX', 'MSFT', 'NVDA', 'PEP', 'PM', 'SWK', 'TROW', 'TSLA', 'UNH', 'XOM']
 # Fabi --> TICKERS = ['AAPL', 'BEN', 'FIZZ', 'FXAIX', 'JPM', 'QQQ', 'RSP', 'SCHD', 'SPAXX', 'SPY', 'TLT', 'TSLA', 'VOO', 'XLK']
-TICKERS = ['A3.BA', 'BHIP.BA', 'BPAT.BA', 'BYMA.BA', 'CRES.BA', 'ECOG.BA', 'IRSA.BA', 'MOLA.BA', 'MOLI.BA', 'TRAN.BA', 'YPFD.BA']
+TICKERS = ['MSFT', 'GOOGL', 'NVDA', 'YPFD.BA']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['BHIP.BA']  # Por defecto se muestra AAPL
+    default=['NVDA']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
