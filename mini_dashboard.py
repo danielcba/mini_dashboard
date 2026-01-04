@@ -52,8 +52,7 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-# TICKERS = ['AAPL', 'ADBE', 'AMCR', 'AMZN', 'AVGO', 'BEN', 'CDUAF', 'CVX', 'FDX', 'FIZZ', 'FRT', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'INTC', 'JNJ', 'KAI', 'KO', 'LNVGY', 'NWN', 'MELI', 'META', 'MKTX', 'MSFT', 'NVDA', 'PEP', 'PM', 'SWK', 'TROW', 'TSLA', 'UNH', 'XOM']
-# Fabi --> TICKERS = ['AAPL', 'BEN', 'FIZZ', 'FXAIX', 'JPM', 'QQQ', 'RSP', 'SCHD', 'SPAXX', 'SPY', 'TLT', 'TSLA', 'VOO', 'XLK']
+# TICKERS = ['AAPL', 'BHIP.BA','BYMA.BA', 'MO', 'ADBE', 'AMCR', 'AMZN', 'AVGO', 'BEN', 'CDUAF', 'CVX', 'FDX', 'FIZZ', 'FRT', '^GSPC', 'GOOG', 'GOOGL', 'IBM', 'INTC', 'JNJ', 'KAI', 'KO', 'LNVGY', 'NWN', 'MELI', 'META', 'MKTX', 'MSFT', 'NVDA', 'PEP', 'PM', 'SWK', 'TROW', 'TSLA', 'UNH', 'XOM']
 TICKERS = ['GOOGL', 'MSFT', 'NVDA']
 
 # Sección lateral de configuración del usuario
@@ -61,7 +60,7 @@ st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['GOOGL', 'MSFT', 'NVDA']  # Por defecto se muestra AAPL
+    default=['GOOGL']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
