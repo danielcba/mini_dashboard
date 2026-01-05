@@ -59,7 +59,7 @@ st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['GOOGL']  # Por defecto se muestra AAPL
+    default=['GOOGL', 'MSFT', 'NVDA']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
