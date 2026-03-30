@@ -52,14 +52,14 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['GOOGL', 'MSFT', 'NVDA', 'YPF.BA']
+TICKERS = ['GOOGL', 'MSFT', 'NVDA', 'YPF']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['GOOGL', 'MSFT', 'NVDA', 'YPF.BA']  # Por defecto se muestra AAPL
+    default=['GOOGL', 'MSFT', 'NVDA', 'YPF']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
