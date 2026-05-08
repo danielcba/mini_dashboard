@@ -120,32 +120,69 @@ if ticker_seleccionado:
         with col1:
             # Gráfico del precio de cierre
             fig = go.Figure()
+            
+            # Determinar color basado en la tendencia (estilo Google Finance)
+            if not historico.empty:
+                precio_inicial = historico['Close'].iloc[0]
+                precio_final = historico['Close'].iloc[-1]
+                if precio_final >= precio_inicial:
+                    line_color = '#10B981'  # Verde
+                    fill_color = 'rgba(16, 185, 129, 0.1)'
+                else:
+                    line_color = '#EF4444'  # Rojo
+                    fill_color = 'rgba(239, 68, 68, 0.1)'
+            else:
+                line_color = 'royalblue'
+                fill_color = 'rgba(65, 105, 225, 0.1)'
+
             fig.add_trace(go.Scatter(
                 x=historico.index,
                 y=historico['Close'],
-                mode='lines+markers',
+                mode='lines',
                 name='Cierre',
-                line=dict(color='royalblue', width=2)
+                line=dict(color=line_color, width=2),
+                fill='tozeroy',
+                fillcolor=fill_color
             ))
+            
+            # Ajustar el rango del eje Y para que el fill no fuerce a empezar en 0
+            if not historico.empty:
+                min_y = historico['Close'].min() * 0.95
+                max_y = historico['Close'].max() * 1.05
+                fig.update_yaxes(range=[min_y, max_y])
             
             # Añadir bandas de máximo y mínimo de 52 semanas si están disponibles
             if 'fiftyTwoWeekHigh' in info and 'fiftyTwoWeekLow' in info:
                 max_52 = info['fiftyTwoWeekHigh']
                 min_52 = info['fiftyTwoWeekLow']
-                fig.add_hline(y=max_52, line_dash="dash", line_color="green", 
+                fig.add_hline(y=max_52, line_dash="dash", line_color="rgba(128, 128, 128, 0.5)", 
                               annotation_text=f"Máx 52s: {max_52:.2f}", 
                               annotation_position="bottom right")
-                fig.add_hline(y=min_52, line_dash="dash", line_color="red", 
+                fig.add_hline(y=min_52, line_dash="dash", line_color="rgba(128, 128, 128, 0.5)", 
                               annotation_text=f"Mín 52s: {min_52:.2f}", 
                               annotation_position="bottom right")
             
             fig.update_layout(
-                title="Evolución del Precio",
-                xaxis_title="Fecha",
-                yaxis_title="Precio",
-                yaxis=dict(tickformat=".2f"),
+                xaxis_title="",
+                yaxis_title="",
+                yaxis=dict(
+                    tickformat=".2f",
+                    showgrid=True,
+                    gridcolor='rgba(128, 128, 128, 0.2)',
+                    zeroline=False
+                ),
+                xaxis=dict(
+                    showgrid=True,
+                    gridcolor='rgba(128, 128, 128, 0.2)',
+                    zeroline=False,
+                    showline=False
+                ),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
                 template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
-                height=450
+                height=450,
+                margin=dict(l=0, r=0, t=10, b=0),
+                hovermode="x unified"
             )
             st.plotly_chart(fig, use_container_width=True, key=f"{ticker}_price")
 
@@ -162,8 +199,22 @@ if ticker_seleccionado:
                     color_continuous_scale='greens'
                 )
                 fig_div.update_layout(
+                    xaxis_title="",
+                    yaxis_title="",
+                    yaxis=dict(
+                        showgrid=True,
+                        gridcolor='rgba(128, 128, 128, 0.2)',
+                        zeroline=False
+                    ),
+                    xaxis=dict(
+                        showgrid=False,
+                        zeroline=False
+                    ),
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
                     template="plotly_dark" if st.get_option("theme.base") == "dark" else "plotly_white",
-                    height=300
+                    height=300,
+                    margin=dict(l=0, r=0, t=40, b=0)
                 )
                 st.plotly_chart(fig_div, use_container_width=True, key=f"{ticker}_div")
             else:
