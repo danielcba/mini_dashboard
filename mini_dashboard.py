@@ -52,14 +52,14 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['CEG', 'GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']
+TICKERS = ['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF', 'CEG', 'IREN', 'AST', 'OUST', 'IONQ']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['CEG', 'GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']  # Por defecto se muestra AAPL
+    default=['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']  # Por defecto se muestran estas.
 )
 
 # Selección de periodo para datos históricos
