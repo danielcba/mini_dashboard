@@ -52,7 +52,7 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF', 'ASTS', 'CEG', 'IONQ',, 'IREN', 'OUST']
+TICKERS = ['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF', 'ASTS', 'CEG', 'IONQ', 'IREN', 'OUST']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
