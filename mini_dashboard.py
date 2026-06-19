@@ -123,7 +123,6 @@ if ticker_seleccionado:
             
             # Determinar color basado en la tendencia (estilo Google Finance)
             if not historico.empty:
-                historico = historico.sort_index()
                 precio_inicial = historico['Close'].iloc[0]
                 precio_final = historico['Close'].iloc[-1]
                 if precio_final >= precio_inicial:
