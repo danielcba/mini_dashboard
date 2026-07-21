@@ -52,14 +52,14 @@ METRICAS_CLAVE = {
 }
 
 # Lista de tickers disponibles (acciones locales e internacionales)
-TICKERS = ['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF', 'ASTS', 'CEG', 'IONQ', 'IREN', 'OUST']
+TICKERS = ['GOOGL', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']
 
 # Sección lateral de configuración del usuario
 st.sidebar.title("⚙️ Configuración")
 ticker_seleccionado = st.sidebar.multiselect(
     "Selecciona uno o más tickers:",
     options=TICKERS,
-    default=['GOOGL', 'INTC', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']  # Por defecto se muestran estas.
+    default=['GOOGL', 'MSFT', 'NVDA', 'SPXL', 'TQQQ', 'YPF']  # Por defecto se muestra AAPL
 )
 
 # Selección de periodo para datos históricos
@@ -70,13 +70,16 @@ periodo = st.sidebar.selectbox(
 )
 
 # Función para obtener la info y los datos históricos de un ticker
-@st.cache_data
+@st.cache_data(ttl=3600)
 def obtener_datos(ticker, periodo, reintentos: int = 3, pausa_inicial: int = 2):
     """Descarga información y precios históricos del ticker.
 
     Realiza varios reintentos con back-off exponencial para evitar errores
     `YFRateLimitError` cuando se excede el límite de Yahoo Finance (frecuente
-    en Streamlit Cloud donde muchas apps comparten IP).
+    en Streamlit Cloud donde muchas apps comparten IP). Captura también
+    excepciones genéricas (JSONDecodeError, ConnectionError, KeyError, etc.)
+    para que la app no caiga en caso de respuesta malformada o timeout.
+    TTL de 1h en cache para reducir presión sobre Yahoo Finance.
     """
     for intento in range(reintentos):
         try:
@@ -85,13 +88,19 @@ def obtener_datos(ticker, periodo, reintentos: int = 3, pausa_inicial: int = 2):
             historico = datos.history(period=periodo)
             return info, historico
         except YFRateLimitError:
-            # Si no es el último intento, esperar y reintentar
             if intento < reintentos - 1:
                 time.sleep(pausa_inicial * (2 ** intento))  # back-off exponencial
             else:
                 st.warning(f"⚠️ Límite de peticiones alcanzado para {ticker}. Intenta más tarde.")
-                # Devolver estructuras vacías para evitar que la app se caiga
                 return {}, pd.DataFrame()
+        except Exception:
+            if intento < reintentos - 1:
+                time.sleep(pausa_inicial * (2 ** intento))
+            else:
+                st.warning(f"⚠️ No se pudieron obtener datos de {ticker}. Intenta más tarde.")
+                return {}, pd.DataFrame()
+
+    return {}, pd.DataFrame()
 
 # Función para formatear números grandes (millones y billones)
 def format_number(val):
@@ -112,6 +121,14 @@ if ticker_seleccionado:
 
         # Obtener el nombre de la empresa (shortName o longName)
         company_name = info.get('shortName', info.get('longName', '')) or 'Empresa desconocida'
+
+        # A3: si no hay datos, mostrar error y saltar este ticker sin renderizar
+        if not info and historico.empty:
+            st.subheader(f"📊 {ticker} - {company_name}")
+            st.error(f"❌ No se pudieron obtener datos de {ticker}. Puede que Yahoo Finance esté limitando las peticiones desde esta IP (común en Streamlit Cloud). Intenta de nuevo más tarde.")
+            st.session_state.setdefault("tickers_fallidos", []).append(ticker)
+            continue
+
         st.subheader(f"📊 {ticker} - {company_name}")  # Subtítulo con el nombre del ticker y la empresa
 
         # Creamos dos columnas: una para gráficos y otra para métricas
@@ -120,9 +137,16 @@ if ticker_seleccionado:
         with col1:
             # Gráfico del precio de cierre
             fig = go.Figure()
-            
+
+            # A2: guardia robusta contra historico sin columna Close
+            tiene_cierre = (
+                not historico.empty
+                and 'Close' in historico.columns
+                and historico['Close'].notna().any()
+            )
+
             # Determinar color basado en la tendencia (estilo Google Finance)
-            if not historico.empty:
+            if tiene_cierre:
                 precio_inicial = historico['Close'].iloc[0]
                 precio_final = historico['Close'].iloc[-1]
                 if precio_final >= precio_inicial:
@@ -135,15 +159,19 @@ if ticker_seleccionado:
                 line_color = 'royalblue'
                 fill_color = 'rgba(65, 105, 225, 0.1)'
 
-            fig.add_trace(go.Scatter(
-                x=historico.index,
-                y=historico['Close'],
-                mode='lines',
-                name='Cierre',
-                line=dict(color=line_color, width=2),
-                fill='tozeroy',
-                fillcolor=fill_color
-            ))
+            # Solo añadir la traza si tenemos datos válidos
+            if tiene_cierre:
+                fig.add_trace(go.Scatter(
+                    x=historico.index,
+                    y=historico['Close'],
+                    mode='lines',
+                    name='Cierre',
+                    line=dict(color=line_color, width=2),
+                    fill='tozeroy',
+                    fillcolor=fill_color
+                ))
+            else:
+                st.warning(f"⚠️ {ticker} no devolvió precios históricos para el periodo seleccionado.")
             
             # Ajustar el rango del eje Y para que el fill no fuerce a empezar en 0
             if not historico.empty:
@@ -186,12 +214,19 @@ if ticker_seleccionado:
             )
             st.plotly_chart(fig, use_container_width=True, key=f"{ticker}_price")
 
-            # Gráfico de dividendos si existen datos de dividendos
-            if 'Dividends' in historico.columns and historico['Dividends'].sum() > 0:
+            # Gráfico de dividendos si existen datos de dividendos (A2: acceso defensivo)
+            dividendos = historico.get('Dividends', pd.Series(dtype=float))
+            tiene_dividendos = (
+                not dividendos.empty
+                and dividendos.sum() > 0
+                and historico.index.name is not None
+            )
+            if tiene_dividendos:
                 df_div = historico[historico['Dividends'] > 0].reset_index()
+                col_fecha = df_div.columns[0]  # seguridad: tomar la primera columna de fecha
                 fig_div = px.bar(
                     df_div,
-                    x='Date',
+                    x=col_fecha,
                     y='Dividends',
                     labels={'Dividends': 'Dividendos'},
                     title='Dividendos pagados',
